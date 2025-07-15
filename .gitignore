@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# dotenv environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Sequelize migrations/seeders logs
+src/seeders/*.log
+
+# Uploaded files
+src/uploads/
+
+# VSCode settings
+.vscode/
+
+# Other
+coverage/
+dist/
+build/ 
