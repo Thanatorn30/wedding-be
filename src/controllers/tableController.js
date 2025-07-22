@@ -35,12 +35,43 @@ const postTable = async (req, res) => {
       .status(500)
       .json({ message: "Failed to create Table", error: err.message });
   }
-
-
 }
+
+const patchTable = async (req, res) => {
+  const { used, maxSeat } = req.body;
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: 'id is required' });
+  }
+  if (used == null || maxSeat == null) {
+    return res.status(400).json({ message: 'used and maxSeat are required' });
+  }
+  if (isNaN(used) || isNaN(maxSeat)) {
+    return res.status(400).json({ message: 'used and maxSeat must be numbers' });
+  }
+
+  const checkTable = await Table.findOne({ where: { id } });
+  if (!checkTable) {
+    return res.status(404).json({ message: 'table not found' });
+  }
+
+  if (used > maxSeat) {
+    return res.status(400).json({ message: 'max seat must be greater than used' });
+  }
+
+  try {
+    await Table.update({ used, maxSeat }, { where: { id } });
+    const updatedTable = await Table.findOne({ where: { id } });
+    return res.status(200).json({ message: 'table updated successfully', table: updatedTable });
+  } catch (err) {
+    return res.status(500).json({ message: 'failed to update table', error: err.message });
+  }
+};
 
 
 module.exports = {
   getAllTable,
-  postTable
+  postTable,
+  patchTable
 };

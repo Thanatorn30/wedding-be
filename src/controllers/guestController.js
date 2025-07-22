@@ -12,6 +12,17 @@ const getGuest = async (req, res) => {
   }
 };
 
+const getGuestId = async (req, res) => {
+  try {
+    const users = await Guest.findOne({ where: (id = req.id) });
+    res.status(200).json({user:users});
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch users", error: err.message });
+  }
+};
+
 const postGuest = async (req, res) => {
   const { firstName, lastName, nickName, typeId, tableId, sumFollower } =
     req.body;
@@ -152,6 +163,7 @@ const postGuestType = async (req, res) => {
 module.exports = {
   getGuest,
   postGuest,
+  getGuestId,
   patchGuest,
   deleteGuest,
   postGuestType,
