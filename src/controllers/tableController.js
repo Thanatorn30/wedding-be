@@ -38,17 +38,14 @@ const postTable = async (req, res) => {
 }
 
 const patchTable = async (req, res) => {
-  const { used, maxSeat } = req.body;
+  const { used } = req.body;
   const { id } = req.params;
 
   if (!id) {
     return res.status(400).json({ message: 'id is required' });
   }
-  if (used == null || maxSeat == null) {
-    return res.status(400).json({ message: 'used and maxSeat are required' });
-  }
-  if (isNaN(used) || isNaN(maxSeat)) {
-    return res.status(400).json({ message: 'used and maxSeat must be numbers' });
+  if (used == null) {
+    return res.status(400).json({ message: 'used is required' });
   }
 
   const checkTable = await Table.findOne({ where: { id } });
@@ -56,14 +53,14 @@ const patchTable = async (req, res) => {
     return res.status(404).json({ message: 'table not found' });
   }
 
-  if (used > maxSeat) {
+  if (used > 10) {
     return res.status(400).json({ message: 'max seat must be greater than used' });
   }
 
   try {
-    await Table.update({ used, maxSeat }, { where: { id } });
+    await Table.update({ used }, { where: { id } });
     const updatedTable = await Table.findOne({ where: { id } });
-    return res.status(200).json({ message: 'table updated successfully', table: updatedTable });
+    return res.status(200).json({ message: 'success', table: updatedTable });
   } catch (err) {
     return res.status(500).json({ message: 'failed to update table', error: err.message });
   }

@@ -25,7 +25,7 @@ router.post("/guest/type/create",optionalAuth, guestController.postGuestType);
 router.get("/guest/edit/:id",optionalAuth, guestController.patchGuest);
 
 // DELETE Guest
-router.post("/guest/delete/:id", guestController.deleteGuest,);
+router.delete("/guest/delete/:id", guestController.deleteGuest);
 
 
 

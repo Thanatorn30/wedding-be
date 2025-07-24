@@ -1,9 +1,23 @@
 const GuestType = require("../models/GuestType");
 const Guest = require("../models/Guest");
+const Table  = require("../models/Table");
 
 const getGuest = async (req, res) => {
   try {
-    const users = await Guest.findAll();
+    const users = await Guest.findAll({
+      include: [
+        {
+          model: GuestType,
+          as: 'guestType',
+          attributes: ["type"],
+        },
+        {
+          model: Table,
+          as: 'table',
+          attributes: ["tableNumber","maxSeat","used"],
+        },
+      ],
+    });
     res.status(200).send(users);
   } catch (err) {
     res
@@ -118,7 +132,7 @@ const deleteGuest = async (req, res) => {
     }
     const deletedRows = await Guest.destroy({ where: { id: id } });
 
-    res.status(200).json({ message: "Guest deleted successfully" });
+    res.status(200).json({ message: "success" });
   } catch (error) {
     res.status(500).json({ message: "Error delete guest" });
   }
