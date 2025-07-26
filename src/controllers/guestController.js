@@ -27,8 +27,9 @@ const getGuest = async (req, res) => {
 };
 
 const getGuestId = async (req, res) => {
+  const { id } = req.params;
   try {
-    const users = await Guest.findOne({ where: (id = req.id) });
+    const users = await Guest.findOne({ where: { id: id } });
     res.status(200).json({user:users});
   } catch (err) {
     res

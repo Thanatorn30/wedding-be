@@ -14,7 +14,7 @@ const { auth, adminAuth, optionalAuth } = require("../middleware/auth");
 // ------ Guest ------
 // GET Guest
 router.get("/guest/list", guestController.getGuest);
-router.get("/guest/id", guestController.getGuestId,);
+router.get("/guest/id/:id", guestController.getGuestId,);
 router.get("/guest/type", guestController.getGuestType);
 
 // POST Guest
@@ -22,7 +22,7 @@ router.post("/guest/create",optionalAuth ,guestController.postGuest);
 router.post("/guest/type/create",optionalAuth, guestController.postGuestType);
 
 // PUT Guest
-router.get("/guest/edit/:id",optionalAuth, guestController.patchGuest);
+router.put("/guest/edit",optionalAuth, guestController.patchGuest);
 
 // DELETE Guest
 router.delete("/guest/delete/:id", guestController.deleteGuest);
