@@ -39,13 +39,11 @@ const getGuestId = async (req, res) => {
 };
 
 const postGuest = async (req, res) => {
-  const { firstName, lastName, nickName, typeId, tableId, sumFollower } =
+  const { name, typeId, tableId, sumFollower } =
     req.body;
 
   if (
-    !firstName ||
-    !lastName ||
-    !nickName ||
+    !name ||
     !typeId ||
     !tableId ||
     !sumFollower
@@ -56,14 +54,14 @@ const postGuest = async (req, res) => {
   // check dup
   const checkGuest = await Guest.findOne({
     where: {
-      firstName,
-      lastName,
-      nickName,
+      name,
       typeId,
       tableId,
       sumFollower,
     },
   });
+
+  console.log("checkGuest=====>", checkGuest);
 
   if (checkGuest) {
     return res.status(409).json({ message: "Guest already exists." });
@@ -71,16 +69,14 @@ const postGuest = async (req, res) => {
 
   try {
     const guest = await Guest.create({
-      firstName,
-      lastName,
-      nickName,
+      name,
       typeId,
       tableId,
       sumFollower,
     });
-    return res
-      .status(201)
-      .json({ message: "Guest created successfully.", guest });
+          return res
+        .status(201)
+        .json({ message: "Guest created successfully.", guest });
   } catch (err) {
     return res
       .status(500)
@@ -89,14 +85,12 @@ const postGuest = async (req, res) => {
 };
 
 const patchGuest = async (req, res) => {
-  const { firstName, lastName, nickName, typeId, tableId, sumFollower } =
+  const { name, typeId, tableId, sumFollower } =
     req.body;
   const { id } = req.params;
   const updateData = {
-    firstName: firstName ? firstName : "",
-    lastName: lastName ? lastName : "",
-    nickName: nickName ? nickName : "",
-    typeId: typeId ? nickName : "",
+    name: name ? name : "",
+    typeId: typeId ? typeId : "",
     tableId: tableId ? tableId : "",
     sumFollower: sumFollower ? sumFollower : "",
   };

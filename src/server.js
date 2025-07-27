@@ -51,7 +51,7 @@ async function startServer() {
   try {
     // Sync database to create tables
     // Sync all table
-    // await sequelize.sync({ alter: true });
+    // await sequelize.sync({ force: true });
     // Drop all table
     // sequelize.drop()
     console.log("All tables dropped and recreated!");

@@ -22,7 +22,7 @@ router.post("/guest/create",optionalAuth ,guestController.postGuest);
 router.post("/guest/type/create",optionalAuth, guestController.postGuestType);
 
 // PUT Guest
-router.put("/guest/edit",optionalAuth, guestController.patchGuest);
+router.put("/guest/edit/:id",optionalAuth, guestController.patchGuest);
 
 // DELETE Guest
 router.delete("/guest/delete/:id", guestController.deleteGuest);
