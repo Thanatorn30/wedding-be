@@ -3,18 +3,25 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
+const http = require('http');
 require('dotenv').config();
 
 
 
 const routes = require('./routes');
 const { sequelize } = require('./config/database');
+const { initializeSocket } = require('./config/socket');
+const Image = require('./models/Image');
 
 // Import all models to establish relationships
 require('./models/index');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// Initialize Socket.io
+initializeSocket(server);
 
 // Middleware
 app.use(helmet());
@@ -83,11 +90,21 @@ async function startServer() {
     // await sequelize.sync({ force: true });
     // Drop all table
     // sequelize.drop()
-    console.log("All tables dropped and recreated!");
+    // await sequelize.sync()
+    // await Image.sync({ alter: true })
     
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+    // Initialize Google Auth and log token
+    // try {
+    //   const accessToken = await googleAuthService.getAccessToken();
+    //   console.log('✅ Google Auth initialized successfully');
+    // } catch (authError) {
+    //   console.error('⚠️ Google Auth initialization failed:', authError.message);
+    // }
+    
+    server.listen(PORT, () => {
+      console.log(`\n🚀 Server running on port ${PORT}`);
+      console.log(`🔌 WebSocket server ready`);
+      // console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       // console.log(`🔗 API docs: http://localhost:${PORT}/api`);
     });
   } catch (error) {

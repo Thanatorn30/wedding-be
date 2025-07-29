@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const guestController = require("../controllers/guestController");
 const userController = require("../controllers/userController");
-const tableController = require("../controllers/tableController")
+const tableController = require("../controllers/tableController");
+const uploadController = require("../controllers/uploadController");
+const imageController = require("../controllers/imageController");
+const socketRoutes = require("./socket");
 const { auth, adminAuth, optionalAuth } = require("../middleware/auth");
 
 // Test endpoint
@@ -44,27 +47,21 @@ router.patch("/table/update/:id", tableController.patchTable);
 router.post("/admin", userController.postUser);
 router.post("/login", userController.login);
 
+// ------ Upload ------
+// POST Upload
+router.post("/image/create", uploadController.upload.single('image'), uploadController.uploadSingleImage,imageController.createImage);
+// router.post("/upload/multiple", uploadController.upload.array('images', 10), uploadController.uploadMultipleImages);
 
+// GET Upload
+router.get("/image/list", imageController.imageList);
 
+// PUT Upload
+router.put("/upload/transform/:public_id", uploadController.transformImage);
 
+// DELETE Upload
+router.delete("/image/delete/:public_id", uploadController.deleteImage);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ------ Socket ------
+router.use("/socket", socketRoutes);
 
 module.exports = router;

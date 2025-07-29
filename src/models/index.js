@@ -2,6 +2,7 @@ const Guest = require('./Guest');
 const GuestType = require('./GuestType');
 const Table = require('./Table');
 const User = require('./User');
+const Image = require('./Image');
 
 // Define relationships
 
@@ -29,5 +30,6 @@ module.exports = {
   Guest,
   GuestType,
   Table,
-  User
+  User,
+  Image
 };

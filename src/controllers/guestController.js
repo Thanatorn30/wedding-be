@@ -61,7 +61,6 @@ const postGuest = async (req, res) => {
     },
   });
 
-  console.log("checkGuest=====>", checkGuest);
 
   if (checkGuest) {
     return res.status(409).json({ message: "Guest already exists." });
@@ -74,9 +73,10 @@ const postGuest = async (req, res) => {
       tableId,
       sumFollower,
     });
-          return res
-        .status(201)
-        .json({ message: "Guest created successfully.", guest });
+    
+    return res
+      .status(201)
+      .json({ message: "Guest created successfully.", guest });
   } catch (err) {
     return res
       .status(500)
