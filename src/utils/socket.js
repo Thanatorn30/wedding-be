@@ -1,9 +1,8 @@
-const { getIO } = require('../config/socket');
+const { emitToChannel, emitToAll } = require('../config/pusher');
 
 // Emit image events
 const emitImageUploaded = (weddingId, imageData) => {
-  const io = getIO();
-  io.to(`wedding-${weddingId}`).emit('image-uploaded', {
+  emitToChannel(`wedding-${weddingId}`, 'image-uploaded', {
     weddingId,
     image: imageData
   });
@@ -11,14 +10,15 @@ const emitImageUploaded = (weddingId, imageData) => {
 
 // Broadcast to all connected clients
 const broadcastToAll = (event, data) => {
-  const io = getIO();
-  io.emit(event, data);
+  emitToAll(event, data);
 };
 
-// Get connected clients count
+// Get connected clients count (Pusher doesn't provide this directly)
 const getConnectedClientsCount = () => {
-  const io = getIO();
-  return io.engine.clientsCount;
+  // Pusher doesn't provide real-time client count through the server SDK
+  // This would need to be implemented differently if required
+  console.log('⚠️ Client count not available with Pusher server SDK');
+  return 0;
 };
 
 module.exports = {

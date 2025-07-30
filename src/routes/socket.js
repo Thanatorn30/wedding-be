@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { getIO } = require('../config/socket');
+const { getPusher, emitToChannel, emitToAll } = require('../config/pusher');
 
-// Get connected clients count
+// Get connected clients count (Pusher doesn't provide this directly)
 router.get('/clients/count', (req, res) => {
   try {
-    const io = getIO();
-    const count = io.engine.clientsCount;
+    // Pusher doesn't provide real-time client count through the server SDK
+    // This would need to be implemented differently if required
     res.json({ 
       success: true, 
-      connectedClients: count 
+      connectedClients: 0,
+      message: 'Client count not available with Pusher server SDK'
     });
   } catch (error) {
     res.status(500).json({ 
@@ -19,14 +20,14 @@ router.get('/clients/count', (req, res) => {
   }
 });
 
-// Get all connected socket IDs
+// Get all connected socket IDs (Pusher doesn't provide this directly)
 router.get('/clients/list', (req, res) => {
   try {
-    const io = getIO();
-    const sockets = Array.from(io.sockets.sockets.keys());
+    // Pusher doesn't provide socket IDs through the server SDK
     res.json({ 
       success: true, 
-      connectedSockets: sockets 
+      connectedSockets: [],
+      message: 'Socket IDs not available with Pusher server SDK'
     });
   } catch (error) {
     res.status(500).json({ 
@@ -40,7 +41,6 @@ router.get('/clients/list', (req, res) => {
 router.post('/broadcast', (req, res) => {
   try {
     const { event, data } = req.body;
-    const io = getIO();
     
     if (!event) {
       return res.status(400).json({ 
@@ -49,7 +49,7 @@ router.post('/broadcast', (req, res) => {
       });
     }
     
-    io.emit(event, data);
+    emitToAll(event, data);
     res.json({ 
       success: true, 
       message: `Event '${event}' broadcasted to all clients` 
@@ -67,7 +67,6 @@ router.post('/room/:roomId/message', (req, res) => {
   try {
     const { roomId } = req.params;
     const { event, data } = req.body;
-    const io = getIO();
     
     if (!event) {
       return res.status(400).json({ 
@@ -76,7 +75,7 @@ router.post('/room/:roomId/message', (req, res) => {
       });
     }
     
-    io.to(roomId).emit(event, data);
+    emitToChannel(roomId, event, data);
     res.json({ 
       success: true, 
       message: `Event '${event}' sent to room '${roomId}'` 

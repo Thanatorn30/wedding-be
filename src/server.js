@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const routes = require('./routes');
 const { sequelize } = require('./config/database');
-const { initializeSocket } = require('./config/socket');
+const { initializePusher } = require('./config/pusher');
 const Image = require('./models/Image');
 
 // Import all models to establish relationships
@@ -20,8 +20,8 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
-// Initialize Socket.io
-initializeSocket(server);
+// Initialize Pusher
+initializePusher();
 
 // Middleware
 app.use(helmet());
@@ -103,7 +103,7 @@ async function startServer() {
     
     server.listen(PORT, () => {
       console.log(`\n🚀 Server running on port ${PORT}`);
-      console.log(`🔌 WebSocket server ready`);
+      console.log(`🔌 Pusher server ready`);
       // console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       // console.log(`🔗 API docs: http://localhost:${PORT}/api`);
     });
